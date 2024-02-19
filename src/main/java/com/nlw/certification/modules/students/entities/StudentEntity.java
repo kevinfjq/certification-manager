@@ -1,5 +1,6 @@
 package com.nlw.certification.modules.students.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +25,7 @@ public class StudentEntity {
     private String email;
 
     @OneToMany(mappedBy = "studentEntity")
+    @JsonBackReference
     private List<CertificationStudentEntity> certificationStudentEntity;
 
     @CreationTimestamp

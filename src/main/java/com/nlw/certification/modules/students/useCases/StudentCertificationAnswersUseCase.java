@@ -4,6 +4,7 @@ import com.nlw.certification.modules.questions.entities.AlternativesEntity;
 import com.nlw.certification.modules.questions.entities.QuestionEntity;
 import com.nlw.certification.modules.questions.repositories.QuestionRepository;
 import com.nlw.certification.modules.students.dto.StudentCertificationAnswerDTO;
+import com.nlw.certification.modules.students.dto.VerifyHasCertificationDTO;
 import com.nlw.certification.modules.students.entities.AnswersCertificationEntity;
 import com.nlw.certification.modules.students.entities.CertificationStudentEntity;
 import com.nlw.certification.modules.students.entities.StudentEntity;
@@ -25,8 +26,14 @@ public class StudentCertificationAnswersUseCase {
     private StudentRepository studentRepository;
     @Autowired
     private CertificationStudentRepository certificationStudentRepository;
-    public CertificationStudentEntity execute(StudentCertificationAnswerDTO studentCertificationAnswerDTO){
+    @Autowired
+    private VerifyIfHasCertificationService verifyIfHasCertificationService;
+    public CertificationStudentEntity execute(StudentCertificationAnswerDTO studentCertificationAnswerDTO) throws Exception {
+        var hasCertification = this.verifyIfHasCertificationService.execute(new VerifyHasCertificationDTO(studentCertificationAnswerDTO.getEmail(), studentCertificationAnswerDTO.getTechnology()));
 
+        if(hasCertification) {
+            throw new Exception("You already have this certification");
+        }
 
         List<QuestionEntity> questionEntities =  questionRepository.findByTechnology(studentCertificationAnswerDTO.getTechnology());
 
